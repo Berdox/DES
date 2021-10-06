@@ -39,3 +39,15 @@ std::string Des::bitremove(std::string in) {
   }
   return temp;
 }
+
+std::string Des::tp(std::string b) {
+  std::string temp;
+  Table t;
+  int a = 58;
+ for(int i = 0; i < b.size(); i++) {
+    a = t.tb(i);
+    temp = b[a-1];
+    std::cout << temp;
+  }
+ return temp;
+}

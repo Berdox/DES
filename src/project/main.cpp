@@ -5,7 +5,7 @@
 #include "Des.h"
 
 int main () {
-std::string input = "1234567890ABCDEF", input1, result;
+std::string input = "1234567890ABCDEF", input1, result, key;
 std::cout << "Enter PLaintext: \n";
 /*std::cin >> input1;
 
@@ -21,8 +21,9 @@ f.open("output.txt");
 f << result;
 f.close();*/
 Des d;
-result = d.bitremove(result);
-std::cout << result << std::endl;
+key = d.bitremove(result);
+//std::cout << key << std::endl;
+result = d.tp(result);
 char c;
 std::cin >> c;
   return 0;

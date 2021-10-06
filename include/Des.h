@@ -12,7 +12,7 @@ public:
 Des();
 
 std::string bitremove(std::string);
-std::string intp(std::string);
+std::string tp(std::string);
 
 };
 #endif

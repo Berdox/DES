@@ -63,3 +63,7 @@ std::string  Table::bintohex(std::string out) {
 std::string temp;
 return temp;
 }
+
+int Table::tb(int a) {
+  return tb1[a];
+}
