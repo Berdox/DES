@@ -5,7 +5,7 @@
 #include "Des.h"
 
 int main () {
-std::string input = "1234567890ABCEGF", input1, result;
+std::string input = "1234567890ABCDEF", input1, result;
 std::cout << "Enter PLaintext: \n";
 /*std::cin >> input1;
 
@@ -16,10 +16,10 @@ std::cout << input << std::endl;
 Table t;
 result = t.hextobin(input);
 std::cout << result << std::endl;
-std::ofstream f;
+/*std::ofstream f;
 f.open("output.txt");
 f << result;
-f.close();
+f.close();*/
 Des d;
 result = d.bitremove(result);
 std::cout << result << std::endl;
