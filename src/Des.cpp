@@ -89,19 +89,25 @@ bool Des::leftnum (int a) {
 }
 
 void Des::subkey(std::string key) {
-  std::string left, right, temp, temp2;
-    std::string lefta [16];
+  std::string left, right, temp, temp2, first;
+  std::string lefta [16];
+  bool b;
   splitkey(key, left, right);
   std::cout << left << std::endl;
+  first = left[0] + left[1];
+
   for(int j = 0; j < 16; j++) {
   for(int i = 0; i < 27; i++) {
-   if (leftnum(i)) {
+    b = leftnum(i);
+   if (b) {
     temp2 = left[i + 1];
     if (temp2 == "1") {
       temp = temp + "1";
     } else {
       temp = temp + "0";
     }
+  } else {
+    left = left + first;
     temp2 = left[i + 2];
     if (temp2 == "1") {
       temp = temp + "1";
@@ -110,8 +116,18 @@ void Des::subkey(std::string key) {
     }
   }
   }
-  lefta [j] = temp;
+  if (b) {
+    lefta [j] = lefta[j] + temp;
+  } else {
+  for(int n = 0; n < 28; n++) {
+  lefta [j] = lefta[j] + temp[n];
+}
+}
 }
 
+ std::cout << lefta[0] << std::endl;
  std::cout << lefta[1] << std::endl;
+ std::cout << lefta[2] << std::endl;
+ std::cout << lefta[3] << std::endl;
+ std::cout << lefta[4] << std::endl;
 }
