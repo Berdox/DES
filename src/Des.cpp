@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
  Des::Des() {
 
@@ -81,53 +82,32 @@ void Des::splitkey(std::string key, std::string& left, std::string& right) {
   right = temp2;
 }
 
-bool Des::leftnum (int a) {
-  if (a == 1 || a == 2 ||a == 9 ||a == 16) {
-    return true;
-  }
-  return false;
-}
-
 void Des::subkey(std::string key) {
-  std::string left, right, temp, temp2, first;
-  std::string lefta [16];
-  bool b;
+  std::string left, right;
   splitkey(key, left, right);
   std::cout << left << std::endl;
-  first = left[0] + left[1];
-
-  for(int j = 0; j < 16; j++) {
-  for(int i = 0; i < 27; i++) {
-    b = leftnum(i);
-   if (b) {
-    temp2 = left[i + 1];
-    if (temp2 == "1") {
-      temp = temp + "1";
-    } else {
-      temp = temp + "0";
-    }
-  } else {
-    left = left + first;
-    temp2 = left[i + 2];
-    if (temp2 == "1") {
-      temp = temp + "1";
-    } else {
-      temp = temp + "0";
-    }
+   std::ofstream f;
+    f.open("output.txt");
+    f << "0:    " << left << "\n";
+  leftkeys[0] = left;
+  std::cout << leftkeys[0] << std::endl;
+  for(int j = 1; j < 16; j++) {
+    leftshift(j, left);
+     f << j << ":    " << leftkeys[j] << "\n";
   }
-  }
-  if (b) {
-    lefta [j] = lefta[j] + temp;
-  } else {
-  for(int n = 0; n < 28; n++) {
-  lefta [j] = lefta[j] + temp[n];
-}
-}
+      f.close();
 }
 
- std::cout << lefta[0] << std::endl;
- std::cout << lefta[1] << std::endl;
- std::cout << lefta[2] << std::endl;
- std::cout << lefta[3] << std::endl;
- std::cout << lefta[4] << std::endl;
+void Des::leftshift(int num, std::string& key) {
+  std::string temp;
+  for(int i = 0; i < shift[num]; i++) {
+    for (int j = 1; j < 27; j++) {
+           temp = temp + key[j];
+       }
+       temp = temp + key[0];
+       key = temp;
+       temp = "";
+   }
+   leftkeys[num] = key;
+   std::cout << leftkeys[num] <<std::endl;
 }
