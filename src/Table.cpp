@@ -67,3 +67,7 @@ return temp;
 int Table::tb(int a) {
   return tb1[a];
 }
+
+int Table::subtab1(int a) {
+  return subtab[a];
+}

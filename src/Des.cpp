@@ -45,7 +45,7 @@ std::string Des::bitremove(std::string in) {
 std::string Des::tp(std::string b) {
   std::string temp;
   Table t;
-  int a, c = 0;
+  int a;
 
  for(int i = 0; i < b.size(); i++) {
     a = t.tb(i);
@@ -82,7 +82,7 @@ void Des::splitkey(std::string key, std::string& left, std::string& right) {
   right = temp2;
 }
 
-void Des::subkey(std::string key) {
+void Des::subkey(std::string key, Des& alg) {
   std::string left, right;
   splitkey(key, left, right);
   std::cout << left << std::endl;
@@ -90,14 +90,15 @@ void Des::subkey(std::string key) {
     f.open("output.txt");
     f << "left origin key = " << left << "\n";
   for(int j = 0; j < 16; j++) {
-  leftkeys[j] = leftshift(j, left);
-     f << "l" << j+1 << " = " << leftkeys[j] << "\n";
+  alg.leftkeys[j] = leftshift(j, left);
+     f << "l" << j+1 << " = " << alg.leftkeys[j] << "\n";
   }
   for(int j = 0; j < 16; j++) {
-    rightkeys[j] = leftshift(j, right);
-     f << "R" << j+1 << " = " << rightkeys[j] << "\n";
+    alg.rightkeys[j] = leftshift(j, right);
+     f << "R" << j+1 << " = " << alg.rightkeys[j] << "\n";
   }
       f.close();
+    combkeys(alg);
 }
 
 std::string Des::leftshift(int num, std::string& key) {
@@ -111,4 +112,35 @@ std::string Des::leftshift(int num, std::string& key) {
        temp = "";
    }
    return key;
+}
+
+
+void Des::combkeys(Des& d) {
+  std::ofstream f;
+   f.open("com.txt");
+  for(int i = 0; i < 16; i++) {
+    keys[i] = leftkeys[i] + rightkeys[i];
+    f << keys[i] << std::endl;
+  }
+  f.close();
+}
+
+
+void Des::finalkeys(Des& alg) {
+  Table t;
+  int a;
+  std::string b, temp;
+  std::ofstream f;
+   f.open("sub.txt");
+  for(int j = 0; j < 16; j++) {
+    b = keys[j];
+  for(int i = 0; i < 48; i++) {
+     a = t.subtab1(i);
+     temp = temp + b[a-1];
+   }
+   subkeys[j] = temp;
+   f << subkeys[j] << std::endl;
+   temp = "";
+ }
+ f.close();
 }

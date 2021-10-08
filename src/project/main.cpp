@@ -26,7 +26,8 @@ f.open("output.txt");
 f << result;
 f.close();*/
 d.split(result, left, right);
-d.subkey(key);
+d.subkey(key, d);
+d.finalkeys(d);
 char c;
 std::cin >> c;
   return 0;
