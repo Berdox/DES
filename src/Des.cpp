@@ -90,13 +90,17 @@ void Des::subkey(std::string key) {
     f.open("output.txt");
     f << "left origin key = " << left << "\n";
   for(int j = 0; j < 16; j++) {
-    leftshift(j, left);
+  leftkeys[j] = leftshift(j, left);
      f << "l" << j+1 << " = " << leftkeys[j] << "\n";
+  }
+  for(int j = 0; j < 16; j++) {
+    rightkeys[j] = leftshift(j, right);
+     f << "R" << j+1 << " = " << rightkeys[j] << "\n";
   }
       f.close();
 }
 
-void Des::leftshift(int num, std::string& key) {
+std::string Des::leftshift(int num, std::string& key) {
   std::string temp;
   for(int i = 0; i < shift[num]; i++) {
     for (int j = 1; j < 28; j++) {
@@ -106,5 +110,5 @@ void Des::leftshift(int num, std::string& key) {
        key = temp;
        temp = "";
    }
-   leftkeys[num] = key;
+   return key;
 }
