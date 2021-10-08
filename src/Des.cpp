@@ -72,7 +72,7 @@ void Des::split(std::string beg, std::string& left, std::string& right) {
 
 void Des::splitkey(std::string key, std::string& left, std::string& right) {
   std::string temp, temp2;
-  for(int i = 0; i < 27; i++) {
+  for(int i = 0; i < 28; i++) {
     temp = temp + key[i];
   }
   left = temp;
@@ -88,12 +88,10 @@ void Des::subkey(std::string key) {
   std::cout << left << std::endl;
    std::ofstream f;
     f.open("output.txt");
-    f << "0:    " << left << "\n";
-  leftkeys[0] = left;
-  std::cout << leftkeys[0] << std::endl;
-  for(int j = 1; j < 16; j++) {
+    f << "left origin key = " << left << "\n";
+  for(int j = 0; j < 16; j++) {
     leftshift(j, left);
-     f << j << ":    " << leftkeys[j] << "\n";
+     f << "l" << j+1 << " = " << leftkeys[j] << "\n";
   }
       f.close();
 }
@@ -101,7 +99,7 @@ void Des::subkey(std::string key) {
 void Des::leftshift(int num, std::string& key) {
   std::string temp;
   for(int i = 0; i < shift[num]; i++) {
-    for (int j = 1; j < 27; j++) {
+    for (int j = 1; j < 28; j++) {
            temp = temp + key[j];
        }
        temp = temp + key[0];
@@ -109,5 +107,4 @@ void Des::leftshift(int num, std::string& key) {
        temp = "";
    }
    leftkeys[num] = key;
-   std::cout << leftkeys[num] <<std::endl;
 }
