@@ -129,11 +129,10 @@ for(int i = 0; i < 48; i++) {
 d.right = temp;
 }
 
-void Des::xorR(Des& d) {
+void Des::xorR(Des& d, int num) {
 std::string temp, a, b, f, g;
-  for(int j = 0; j < 16; j++) {
     a = d.right;
-    b = d.subkeys[j];
+    b = d.subkeys[num];
     for(int i = 0; i < 48; i++) {
       f = a[i];
       g = b[i];
@@ -143,33 +142,29 @@ std::string temp, a, b, f, g;
         temp = temp + "1";
       }
     }
-    d.xorRight[j] = temp;
+    d.xorRight = temp;
     temp = "";
-  }
 }
 
 void Des::sixthbits(Des& d) {
   std::string temp;
   int a = 0;
-for(int n = 0; n < 16; n++) {
-  temp = d.xorRight[n];
+  temp = d.xorRight;
   for(int j = 0; j < 8; j++) {
     for(int i = 0; i < 6; i++) {
-      d.sixth[n][j] = d.sixth[n][j] + temp[a];
+      d.sixth[j] = d.sixth[j] + temp[a];
       a++;
     }
   }
   a = 0;
 }
-}
 
-void Des::sBox(Des& d) {
+void Des::sBox(Des& d, int num) {
   std::string temp, temp2, temp4;
-  int row, col, num = 0, temp3;
+  int row, col, temp3;
   Table t;
-for(int j = 0; j < 16; j++) {
   for(int i = 0; i < 8; i++) {
-    temp = d.sixth[j][i];
+    temp = d.sixth[i];
     temp2 = temp[0];
     temp2 = temp2 + temp[5];
     std::bitset<2> a(temp2);
@@ -185,108 +180,100 @@ for(int j = 0; j < 16; j++) {
 
     switch (num) {
     case 0: {
-        temp3 = t.s1[col][j];
+        temp3 = t.s1[row][col];
         std::bitset<4> k(temp3);
         temp2 = k.to_string();
-        d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+        d.sBoxresult[i] = temp2 + d.sBoxresult[i];
         //std::cout << temp2 << std::endl;
     break;
   }
   case 1: {
-      temp3 = t.s2[col][j];
+      temp3 = t.s2[row][col];
       std::bitset<4> k(temp3);
       temp2 = k.to_string();
-      d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+      d.sBoxresult[i] = temp2 + d.sBoxresult[i];
       //std::cout << temp2 << std::endl;
   break;
 }
 case 2: {
-    temp3 = t.s3[col][j];
+    temp3 = t.s3[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
 //    std::cout << temp2 << std::endl;
 break;
 }
 case 3: {
-    temp3 = t.s4[col][j];
+    temp3 = t.s4[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
 //  std::cout << temp2 << std::endl;
 break;
 }
 case 4: {
-    temp3 = t.s5[col][j];
+    temp3 = t.s5[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
   //  std::cout << temp2 << std::endl;
 break;
 }
 case 5: {
-    temp3 = t.s6[col][j];
+    temp3 = t.s6[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
 //  std::cout << temp2 << std::endl;
 break;
 }
 case 6: {
-    temp3 = t.s7[col][j];
+    temp3 = t.s7[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
   //  std::cout << temp2 << std::endl;
 break;
 }
 case 7: {
-    temp3 = t.s8[col][j];
+    temp3 = t.s8[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
   //  std::cout << temp2 << std::endl;
 break;
 }
   }
-  num++;
     }
-  num = 0;
-  }
 }
 
 void Des::combineSBox(Des& d) {
   std::string temp;
 
-  for(int j = 0; j < 16; j++) {
     for(int i = 0; i < 8; i++) {
-      temp = temp + d.sBoxresult[j][i];
+      temp = temp + d.sBoxresult[i];
     }
-    d.newright[j] = d.newright[j] + temp;
+    d.newright = d.newright + temp;
     temp = "";
-  }
 }
 
 void Des::permSBox(Des& d) {
   std::string temp, temp2;
 Table t;
 int a;
-for(int j = 0; j < 16; j++) {
 for(int i = 0; i < 32; i++) {
   a = t.tb3[i];
-  temp2 = d.newright[j];
+  temp2 = d.newright;
   temp = temp + temp2[a-1];
 }
-d.newright[j] = temp;
+d.newright = temp;
 temp = "";
-}
 }
 
 void Des::finalxor(Des& d) {
   std::string temp, a, b, f, g;
-    for(int j = 0; j < 16; j++) {
       a = d.left;
-      b = d.newright[j];
+      b = d.newright;
       for(int i = 0; i < 32; i++) {
         f = a[i];
         g = b[i];
@@ -296,19 +283,18 @@ void Des::finalxor(Des& d) {
           temp = temp + "1";
         }
       }
-      d.finalright[j] = temp;
+      d.finalright = temp;
       temp = "";
-    }
 }
 
 void Des::reverse(Des& d) {
   std::string temp, temp2;
   for(int j = 0; j < 16; j++) {
-    temp = finalright[j];
+    temp = d.finalright;
     for(int i = 0; i < 32; i++) {
       temp2 = temp + d.left;
     }
-    final64[j] = temp2;
+    d.plaind = temp2;
     temp2 = "";
   }
 }
@@ -317,13 +303,11 @@ void Des::finalPerm(Des& d) {
   std::string temp, temp2;
 Table t;
 int a;
-for(int j = 0; j < 16; j++) {
 for(int i = 0; i < 64; i++) {
   a = t.tb4[i];
-  temp2 = d.final64[j];
+  temp2 = d.plaind;
   temp = temp + temp2[a-1];
 }
-d.end[j] = temp;
+d.end = temp;
 temp = "";
-}
 }
