@@ -24,9 +24,15 @@ void expandright(Des&);
 void xorR(Des&);
 void sixthbits(Des&);
 void sBox(Des&);
+void combineSBox(Des&);
+void permSBox(Des&);
+void finalxor(Des&);
+void reverse(Des&);
+void finalPerm(Des&);
 
 std::string left;
 std::string right;
+std::string OriRight;
 std::string leftkeys [16];
 std::string rightkeys [16];
 std::string keys[16];
@@ -34,6 +40,10 @@ std::string subkeys[16];
 std::string xorRight[16];
 std::string sixth[16][8];
 std::string sBoxresult[16][8];
+std::string newright[16];
+std::string finalright[16];
+std::string final64[16];
+std::string end[16];
 int shift[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 };
 #endif

@@ -43,6 +43,7 @@ for(int i = 28; i < 56; i++) {
   temp2 = temp2 + key[i];
 }
 d.right = temp2;
+d.OriRight = temp2;
  }
 
 void Des::subkey(Des& d) {
@@ -168,7 +169,7 @@ void Des::sBox(Des& d) {
   Table t;
 for(int j = 0; j < 16; j++) {
   for(int i = 0; i < 8; i++) {
-    temp = sixth[j][i];
+    temp = d.sixth[j][i];
     temp2 = temp[0];
     temp2 = temp2 + temp[5];
     std::bitset<2> a(temp2);
@@ -186,56 +187,64 @@ for(int j = 0; j < 16; j++) {
     case 0: {
         temp3 = t.s1[col][j];
         std::bitset<4> k(temp3);
-        temp2 = k.to_string();;
+        temp2 = k.to_string();
+        d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
         //std::cout << temp2 << std::endl;
     break;
   }
   case 1: {
       temp3 = t.s2[col][j];
       std::bitset<4> k(temp3);
-      temp2 = k.to_string();;
-      std::cout << temp2 << std::endl;
+      temp2 = k.to_string();
+      d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
+      //std::cout << temp2 << std::endl;
   break;
 }
 case 2: {
     temp3 = t.s3[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
 //    std::cout << temp2 << std::endl;
 break;
 }
 case 3: {
     temp3 = t.s4[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
 //  std::cout << temp2 << std::endl;
 break;
 }
 case 4: {
     temp3 = t.s5[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
   //  std::cout << temp2 << std::endl;
 break;
 }
 case 5: {
     temp3 = t.s6[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
 //  std::cout << temp2 << std::endl;
 break;
 }
 case 6: {
     temp3 = t.s7[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
   //  std::cout << temp2 << std::endl;
 break;
 }
 case 7: {
     temp3 = t.s8[col][j];
     std::bitset<4> k(temp3);
-    temp2 = k.to_string();;
+    temp2 = k.to_string();
+    d.sBoxresult[j][i] = temp2 + d.sBoxresult[j][i];
   //  std::cout << temp2 << std::endl;
 break;
 }
@@ -244,17 +253,77 @@ break;
     }
   num = 0;
   }
+}
 
+void Des::combineSBox(Des& d) {
+  std::string temp;
 
-  /*int a = 0;
-  temp = d.sixth[0][4];
-  std::cout << temp << std::endl;
-  temp3 = "0";//temp[0];
-  temp3 = temp3 + "0";//temp[5];
-  temp3 = temp3 + "1";
-  temp3 = temp3 + "1";
-  std::cout << temp3 << std::endl;
-  std::bitset<4> temp4(temp3);
-  a = temp4.to_ulong();
-  std::cout << a << std::endl;*/
+  for(int j = 0; j < 16; j++) {
+    for(int i = 0; i < 8; i++) {
+      temp = temp + d.sBoxresult[j][i];
+    }
+    d.newright[j] = d.newright[j] + temp;
+    temp = "";
+  }
+}
+
+void Des::permSBox(Des& d) {
+  std::string temp, temp2;
+Table t;
+int a;
+for(int j = 0; j < 16; j++) {
+for(int i = 0; i < 32; i++) {
+  a = t.tb3[i];
+  temp2 = d.newright[j];
+  temp = temp + temp2[a-1];
+}
+d.newright[j] = temp;
+temp = "";
+}
+}
+
+void Des::finalxor(Des& d) {
+  std::string temp, a, b, f, g;
+    for(int j = 0; j < 16; j++) {
+      a = d.left;
+      b = d.newright[j];
+      for(int i = 0; i < 32; i++) {
+        f = a[i];
+        g = b[i];
+        if( f == g) {
+          temp = temp + "0";
+        }else {
+          temp = temp + "1";
+        }
+      }
+      d.finalright[j] = temp;
+      temp = "";
+    }
+}
+
+void Des::reverse(Des& d) {
+  std::string temp, temp2;
+  for(int j = 0; j < 16; j++) {
+    temp = finalright[j];
+    for(int i = 0; i < 32; i++) {
+      temp2 = temp + d.left;
+    }
+    final64[j] = temp2;
+    temp2 = "";
+  }
+}
+
+void Des::finalPerm(Des& d) {
+  std::string temp, temp2;
+Table t;
+int a;
+for(int j = 0; j < 16; j++) {
+for(int i = 0; i < 64; i++) {
+  a = t.tb4[i];
+  temp2 = d.final64[j];
+  temp = temp + temp2[a-1];
+}
+d.end[j] = temp;
+temp = "";
+}
 }

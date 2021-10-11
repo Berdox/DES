@@ -52,9 +52,22 @@ d.sixthbits(d);
 //std::cout << "0,0  " <<  d.sixth[0][0];
 
 d.sBox(d);
+//std::cout << d.sBoxresult[0][7] << std::endl;
 
+d.combineSBox(d);
+//std::cout << d.newright[3] << std::endl;
 
+d.permSBox(d);
+//std::cout << d.newright[0] << std::endl;
 
+d.finalxor(d);
+//std::cout << d.finalright[0] << std::endl;
+
+d.reverse(d);
+//std::cout << d.final64[3] << std::endl;
+
+d.finalPerm(d);
+std::cout << d.end[15] << std::endl;
 
 /*
 for(int i = 0; i<< plain64.size(); i++) {
