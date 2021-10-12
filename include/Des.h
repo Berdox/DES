@@ -11,6 +11,7 @@
 class Des {
 public:
 Des();
+void encryption(std::string, std::string);
 std::string splitplain(std::string);
 std::string keyperm(std::string);
 void keysplit(std::string, Des&);

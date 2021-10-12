@@ -13,6 +13,70 @@
 
  }
 
+void Des::encryption(std::string plain, std::string key) {
+  std::string keyp;
+  Des d;
+  // gets it into 64 bits
+//  plain64 = d.splitplain(plain);
+  //std::cout << plain64 << std::endl;
+  // gets all the 8th bits out
+  keyp = d.keyperm(key);
+  //std::cout << key << std::endl;
+  // splits the key in half
+  d.keysplit(key, d);
+  //std::cout << d.left << "\n" << d.right << "\n";
+  // does leftshifts and combines the left and right keys
+  d.subkey(d);
+  //std::cout << d.keys[0];
+  d.finalkeys(d);
+  //std::cout << d.subkeys[0];
+  //done with the keysplit
+
+
+  // Does the intial permutation to the plaintext
+  d.plaind = d.plainperm(plain);
+  //std::cout << perm << std::endl;
+
+  for(int num = 0; num < 16; num++) {
+
+  //splits the plain text into two halves
+  d.halfplain(d.plaind, d);
+  //std::cout << d.left << std::endl << d.right << std::endl;
+
+  // does the expansion permutation to the right half
+  d.expandright(d);
+  //std::cout << d.right << "\n";
+
+  // XOR the expanded right and subkeys
+  d.xorR(d, num);
+  //std::cout << d.xorRight[0] << "\n";
+
+  // gets the six bits from the XOR results
+  d.sixthbits(d);
+  //std::cout << "0,0  " <<  d.sixth[0][0];
+
+  d.sBox(d, num);
+  //std::cout << d.sBoxresult[0][7] << std::endl;
+
+  d.combineSBox(d);
+  //std::cout << d.newright[3] << std::endl;
+
+  d.permSBox(d);
+  //std::cout << d.newright[0] << std::endl;
+
+  d.finalxor(d);
+  //std::cout << d.finalright[0] << std::endl;
+
+  d.reverse(d);
+  //std::cout << d.final64[3] << std::endl;
+  }
+
+  d.finalPerm(d);
+
+  std::cout << d.end << std::endl;
+  
+}
+
  std::string Des::splitplain(std::string s) {
    std::string a;
    for(int i = 0; i < (s.size()/2); i++) {
