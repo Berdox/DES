@@ -15,16 +15,16 @@
  }
 
 void Des::encryption(std::string plain, std::string key) {
-  std::string keyp;
+  std::string keyp, six[8];
   Des d;
   // gets it into 64 bits
 //  plain64 = d.splitplain(plain);
   //std::cout << plain64 << std::endl;
   // gets all the 8th bits out
   keyp = d.keyperm(key);
-  //std::cout << key << std::endl;
+  //std::cout << keyp << std::endl;
   // splits the key in half
-  d.keysplit(key, d);
+  d.keysplit(keyp, d);
   //std::cout << d.left << "\n" << d.right << "\n";
   // does leftshifts and combines the left and right keys
   d.subkey(d);
@@ -55,13 +55,16 @@ void Des::encryption(std::string plain, std::string key) {
   // gets the six bits from the XOR results
   d.sixthbits(d);
   //std::cout << "0,0  " <<  d.sixth[0][0];
-
-  d.sBox(d, num);
-  //std::cout << d.sBoxresult[0][7] << std::endl;
+for(int i = 0; i < 8; i++) {
+  d.sBox(d, i);
+}
+  //std::cout << d.sBoxresult[0] << std::endl;
 
   d.combineSBox(d);
   //std::cout << d.newright[3] << std::endl;
-
+for(int i = 0; i < 8; i++){
+  d.sBoxresult[i] = "";
+}
   d.permSBox(d);
   //std::cout << d.newright[0] << std::endl;
 
@@ -74,14 +77,25 @@ void Des::encryption(std::string plain, std::string key) {
 
   d.finalPerm(d);
 
-  std::cout << d.end << std::endl;
+  //std::cout << d.end << std::endl;
 
-  d.string_hex(d);
+  std::string a;
+  int num = 0;
+  for(int j = 0; j < 8; j++) {
+  for(int i = 0; i < 8; i++) {
+      a = a + d.end[num];
+      num++;
+  }
+  d.string_hex(a);
+  d.string_plain(a);
+  a = "";
+}
 }
 
 void Des::dencryption(std::string plain, std::string key) {
   std::string keyp;
   Des d;
+  int num2 = 0;
   // gets it into 64 bits
 //  plain64 = d.splitplain(plain);
   //std::cout << plain64 << std::endl;
@@ -121,7 +135,7 @@ void Des::dencryption(std::string plain, std::string key) {
   d.sixthbits(d);
   //std::cout << "0,0  " <<  d.sixth[0][0];
 
-  d.sBox(d, num);
+  d.sBox(d, num2);
   //std::cout << d.sBoxresult[0][7] << std::endl;
 
   d.combineSBox(d);
@@ -135,11 +149,21 @@ void Des::dencryption(std::string plain, std::string key) {
 
   d.reverse(d);
   //std::cout << d.final64[3] << std::endl;
+  num2++;
   }
 
   d.finalPerm(d);
 
-  d.string_hex(d);
+  std::string a;
+  int num = 0;
+  for(int j = 0; j < 8; j++) {
+  for(int i = 0; i < 8; i++) {
+      a = a + d.end[num];
+      num++;
+  }
+  d.string_plain(a);
+  a = "";
+  }
 }
 
  std::string Des::splitplain(std::string s) {
@@ -157,7 +181,7 @@ int a;
 
 for(int i = 0; i < 56; i++) {
   a = t.ktb[i];
-  temp = temp + plain[a];
+  temp = temp + plain[a -1];
 }
 return temp;
  }
@@ -282,9 +306,11 @@ void Des::sixthbits(Des& d) {
   for(int j = 0; j < 8; j++) {
     for(int i = 0; i < 6; i++) {
       d.sixth[j] = d.sixth[j] + temp[a];
+      std::cout << d.sixth[0] << std::endl;
       a++;
     }
   }
+  //std::cout << s[0] << std::endl;
   a = 0;
 }
 
@@ -292,13 +318,13 @@ void Des::sBox(Des& d, int num) {
   std::string temp, temp2, temp4;
   int row, col, temp3;
   Table t;
-  for(int i = 0; i < 8; i++) {
-    temp = d.sixth[i];
+    temp = d.sixth[num];
     temp2 = temp[0];
     temp2 = temp2 + temp[5];
     std::bitset<2> a(temp2);
     row = a.to_ulong();
     //std::cout << row << std::endl;
+    //std::cout << sixth[0] << std::endl;
     temp2 = temp + temp[1];
     temp2 = temp + temp[2];
     temp2 = temp + temp[3];
@@ -312,7 +338,7 @@ void Des::sBox(Des& d, int num) {
         temp3 = t.s1[row][col];
         std::bitset<4> k(temp3);
         temp2 = k.to_string();
-        d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+        d.sBoxresult[num] = temp2 + d.sBoxresult[num];
         //std::cout << temp2 << std::endl;
     break;
   }
@@ -320,7 +346,7 @@ void Des::sBox(Des& d, int num) {
       temp3 = t.s2[row][col];
       std::bitset<4> k(temp3);
       temp2 = k.to_string();
-      d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+      d.sBoxresult[num] = temp2 + d.sBoxresult[num];
       //std::cout << temp2 << std::endl;
   break;
 }
@@ -328,7 +354,7 @@ case 2: {
     temp3 = t.s3[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
 //    std::cout << temp2 << std::endl;
 break;
 }
@@ -336,7 +362,7 @@ case 3: {
     temp3 = t.s4[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
 //  std::cout << temp2 << std::endl;
 break;
 }
@@ -344,7 +370,7 @@ case 4: {
     temp3 = t.s5[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
   //  std::cout << temp2 << std::endl;
 break;
 }
@@ -352,7 +378,7 @@ case 5: {
     temp3 = t.s6[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
 //  std::cout << temp2 << std::endl;
 break;
 }
@@ -360,7 +386,7 @@ case 6: {
     temp3 = t.s7[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
   //  std::cout << temp2 << std::endl;
 break;
 }
@@ -368,12 +394,17 @@ case 7: {
     temp3 = t.s8[row][col];
     std::bitset<4> k(temp3);
     temp2 = k.to_string();
-    d.sBoxresult[i] = temp2 + d.sBoxresult[i];
+    d.sBoxresult[num] = temp2 + d.sBoxresult[num];
   //  std::cout << temp2 << std::endl;
 break;
 }
   }
-    }
+  temp = "";
+  temp2 = "";
+  temp3 = 0;
+  temp4 = "";
+  //std::cout << d.sBoxresult[0] << std::endl;
+  //std::cout << num << std::endl;
 }
 
 void Des::combineSBox(Des& d) {
@@ -382,7 +413,7 @@ void Des::combineSBox(Des& d) {
     for(int i = 0; i < 8; i++) {
       temp = temp + d.sBoxresult[i];
     }
-    d.newright = d.newright + temp;
+    d.newright = temp;
     temp = "";
 }
 
@@ -418,14 +449,10 @@ void Des::finalxor(Des& d) {
 
 void Des::reverse(Des& d) {
   std::string temp, temp2;
-  for(int j = 0; j < 16; j++) {
     temp = d.finalright;
-    for(int i = 0; i < 32; i++) {
       temp2 = temp + d.left;
-    }
     d.plaind = temp2;
     temp2 = "";
-  }
 }
 
 void Des::finalPerm(Des& d) {
@@ -441,19 +468,26 @@ d.end = temp;
 temp = "";
 }
 
-void Des::string_hex(Des& d) {
-  std::string a;
+void Des::string_hex(std::string a) {
   char b;
-  int num = 0;
-  for(int j = 0; j < 8; j++) {
-  for(int i = 0; i < 8; i++) {
-      a = a + end[num];
-      num++;
-  }
-    //std::cout << a << std::endl;
+  int s;
 std::bitset<8> c(a);
     b = c.to_ulong();
-std::cout << std::hex << (int)b << std::endl;
-a = "";
+  //  std::cout << b << std::endl;
+    if( b < 0) {
+    s = 256 + b;
+  } else {
+    s = b;
+  }
+  //  std::cout << s << std::endl;
+  std::cout << std::hex << s << " ";
 }
+
+void Des::string_plain(std::string a) {
+  char b;
+  int s;
+std::bitset<8> c(a);
+    b = c.to_ulong();
+  std::cout << b << std::endl;
+  //std::cout << std::hex << s << " ";
 }

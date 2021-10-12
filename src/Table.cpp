@@ -55,3 +55,9 @@ std::string Table::char_to_str(char ch)
     std::bitset<8> temp(ch);
     return temp.to_string();
 }
+
+std::string Table::hex_to_str(char ch)
+{
+  std::bitset<4> temp(ch);
+return temp.to_string();
+}

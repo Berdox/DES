@@ -13,6 +13,7 @@ public:
 Table();
 std::string hextobin(std::string);
 std::string char_to_str(char);
+std::string hex_to_str(char);
 char str_to_char(std::string);
 
 int ktb [64] = {57,   49,    41,   33,    25,    17,    9,

@@ -31,7 +31,8 @@ void permSBox(Des&);
 void finalxor(Des&);
 void reverse(Des&);
 void finalPerm(Des&);
-void string_hex(Des&);
+void string_hex(std::string);
+void string_plain(std::string);
 
 std::string plaind;
 std::string left;
