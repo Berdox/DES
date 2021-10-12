@@ -12,6 +12,7 @@ class Des {
 public:
 Des();
 void encryption(std::string, std::string);
+void dencryption(std::string, std::string);
 std::string splitplain(std::string);
 std::string keyperm(std::string);
 void keysplit(std::string, Des&);
@@ -30,6 +31,7 @@ void permSBox(Des&);
 void finalxor(Des&);
 void reverse(Des&);
 void finalPerm(Des&);
+void string_hex(Des&);
 
 std::string plaind;
 std::string left;

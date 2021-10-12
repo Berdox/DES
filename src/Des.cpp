@@ -6,8 +6,9 @@
  #include "Table.h"
  #include <iostream>
  #include <string>
-#include <cstring>
+ #include <cstring>
  #include <bitset>
+ #include <sstream>
 
  Des::Des() {
 
@@ -74,7 +75,71 @@ void Des::encryption(std::string plain, std::string key) {
   d.finalPerm(d);
 
   std::cout << d.end << std::endl;
-  
+
+  d.string_hex(d);
+}
+
+void Des::dencryption(std::string plain, std::string key) {
+  std::string keyp;
+  Des d;
+  // gets it into 64 bits
+//  plain64 = d.splitplain(plain);
+  //std::cout << plain64 << std::endl;
+  // gets all the 8th bits out
+  keyp = d.keyperm(key);
+  //std::cout << key << std::endl;
+  // splits the key in half
+  d.keysplit(key, d);
+  //std::cout << d.left << "\n" << d.right << "\n";
+  // does leftshifts and combines the left and right keys
+  d.subkey(d);
+  //std::cout << d.keys[0];
+  d.finalkeys(d);
+  //std::cout << d.subkeys[0];
+  //done with the keysplit
+
+
+  // Does the intial permutation to the plaintext
+  d.plaind = d.plainperm(plain);
+  //std::cout << perm << std::endl;
+
+  for(int num = 15; num == -1; num--) {
+
+  //splits the plain text into two halves
+  d.halfplain(d.plaind, d);
+  //std::cout << d.left << std::endl << d.right << std::endl;
+
+  // does the expansion permutation to the right half
+  d.expandright(d);
+  //std::cout << d.right << "\n";
+
+  // XOR the expanded right and subkeys
+  d.xorR(d, num);
+  //std::cout << d.xorRight[0] << "\n";
+
+  // gets the six bits from the XOR results
+  d.sixthbits(d);
+  //std::cout << "0,0  " <<  d.sixth[0][0];
+
+  d.sBox(d, num);
+  //std::cout << d.sBoxresult[0][7] << std::endl;
+
+  d.combineSBox(d);
+  //std::cout << d.newright[3] << std::endl;
+
+  d.permSBox(d);
+  //std::cout << d.newright[0] << std::endl;
+
+  d.finalxor(d);
+  //std::cout << d.finalright[0] << std::endl;
+
+  d.reverse(d);
+  //std::cout << d.final64[3] << std::endl;
+  }
+
+  d.finalPerm(d);
+
+  d.string_hex(d);
 }
 
  std::string Des::splitplain(std::string s) {
@@ -374,4 +439,21 @@ for(int i = 0; i < 64; i++) {
 }
 d.end = temp;
 temp = "";
+}
+
+void Des::string_hex(Des& d) {
+  std::string a;
+  char b;
+  int num = 0;
+  for(int j = 0; j < 8; j++) {
+  for(int i = 0; i < 8; i++) {
+      a = a + end[num];
+      num++;
+  }
+    //std::cout << a << std::endl;
+std::bitset<8> c(a);
+    b = c.to_ulong();
+std::cout << std::hex << (int)b << std::endl;
+a = "";
+}
 }
